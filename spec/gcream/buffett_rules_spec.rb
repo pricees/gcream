@@ -3,8 +3,9 @@ require_relative "../../lib/gcream.rb"
 describe Gcream::BuffettRules do
 
   let (:g_skrilla) do
-    dir = File.dirname(__FILE__) + "/.."
-    GSkrilla::Base.stub(:open).and_return(File.read("#{dir}/data/aapl.html"))
+    dir  = File.dirname(__FILE__) + "/.."
+    data = File.read("#{dir}/data/aapl.html")
+    GSkrilla::Base.any_instance.stub(:open).and_return(data)
     GSkrilla::build("aapl")
   end
 
