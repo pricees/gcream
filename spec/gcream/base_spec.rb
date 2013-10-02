@@ -4,6 +4,7 @@ describe Gcream::Base do
 
   let!(:g_skrilla) do
     dir = File.dirname(__FILE__) + "/.."
+    GSkrilla::Summary.any_instance.stub(:open).and_return(File.read("#{dir}/data/aapl.html.summary"))
     GSkrilla::Base.any_instance.stub(:open).and_return(File.read("#{dir}/data/aapl.html"))
     GSkrilla::build("aapl")
   end

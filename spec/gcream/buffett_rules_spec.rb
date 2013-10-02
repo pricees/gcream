@@ -5,6 +5,9 @@ describe Gcream::BuffettRules do
   let (:g_skrilla) do
     dir  = File.dirname(__FILE__) + "/.."
     data = File.read("#{dir}/data/aapl.html")
+    GSkrilla::Summary.any_instance.stub(:open).and_return(
+      File.read("#{dir}/data/aapl.html.summary")
+    )
     GSkrilla::Base.any_instance.stub(:open).and_return(data)
     GSkrilla::build("aapl")
   end
@@ -51,7 +54,7 @@ describe Gcream::BuffettRules do
     end
 
     it "returns valid?" do
-     res = Gcream::BuffettRules::EPS.new(summary)
+     res = Gcream::BuffettRules::PriceToEarnings.new(summary)
      expect(res.valid?).to be_true
     end
   end
