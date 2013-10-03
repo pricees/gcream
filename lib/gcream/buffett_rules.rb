@@ -1,5 +1,35 @@
 module Gcream
 
+  # Buffetts Rules
+  # #1 Vigilant Leadership  (2 rules)
+  #   Current Ratio > 1.5
+  #   Debt / Equit  < 0.5
+  #
+  # #2 A stock must have long term prospects (0 Rules)
+  #   Hold a stock for less than a year Short-term Gains (Income Tax)
+  #   Hold a stock for longer than a year Capital Gains (20%)
+  #
+  # #3 A stock must be stable and understandable
+  #   Stable:
+  #   Earnings (EPS) increasing YoY for 5 years  (10 year summary MSN money)
+  #   Equity increasing YoY for 5 years
+  #   Msn Money -> "Key Ratios" -> 10 year summary for 
+  #     BV increasing YoY for 5 years
+  #     Debt/Equity decreasing YoY for 5 years
+  #
+  #   Understandable:
+  #   What does the company do?  Sector, etc?
+  #
+  #
+  # 
+  #
+  #
+  # # Teds RULES YO!
+  #   Quaterly earnings increasing QoQ
+  #
+  #
+  #
+  #
   class BuffettRules
 
     class Rule
@@ -34,10 +64,9 @@ module Gcream
       end
     end
 
+    # Buffetts Rule #1: Vigiliant Leadership 2/2
     #
-    #
-    #
-    #
+    # Watch out for debt, it will kill you
     class CurrentRatio < Rule
       SAFE_VALUE = 1.5
       attr_reader :bs
@@ -47,7 +76,7 @@ module Gcream
       end
 
       def description
-        "Current Assets / Current Liabilities <= #{SAFE_VALUE}"
+        "Current Assets / Current Liabilities >= #{SAFE_VALUE}"
       end
 
       def value
@@ -63,11 +92,11 @@ module Gcream
       end
     end
 
+    # Buffetts Rule #1: Vigiliant Leadership 1/2
     #
-    #
-    #
-    #
+    # Watch out for debt, it will kill you
     class DebtToEquity < Rule
+
       SAFE_VALUE = 0.5
       attr_reader :bs
 
@@ -76,7 +105,7 @@ module Gcream
       end
 
       def description
-        "Debt / Equity <= 0.5"
+        "Debt / Equity <= #{SAFE_VALUE}"
       end
 
       def value
@@ -126,7 +155,37 @@ module Gcream
       end
     end
 
-    class PriceToBookValuePerShare
+
+    #  PriceToBookValuePerShare
+    #
+    #
+    class Safety < Rule
+      SAFE_VALUE = 20
+      attr_reader :summary, :balance_sheet
+
+      def initialize(summary, balance_sheet)
+        @summary, @balance_sheet = summary, balance_sheet
+      end
+
+      def description
+        "Safety (1/P/BV) > #{20}"
+      end
+
+      def value
+        (1.fdiv(price_to_book_ratio) * 100).round(2)
+      end
+
+      def price_to_book_ratio
+        PriceToBookValuePerShare.new(summary, balance_sheet).value
+      end
+
+      def valid?
+        value >= SAFE_VALUE
+      end
+    end
+
+
+    class PriceToBookValuePerShare < Rule
       SAFE_VALUE = 1.5
       attr_reader :summary, :balance_sheet
 
@@ -149,10 +208,6 @@ module Gcream
       def valid?
         value <= SAFE_VALUE
       end
-
-      def report
-        [description, value, valid?]
-      end
     end
 
     class PriceToEarnings < Rule
@@ -173,6 +228,48 @@ module Gcream
 
       def valid?
         value <= SAFE_VALUE
+      end
+    end
+
+    class EPS < Rule
+      SAFE_VALUE = 5
+      attr_reader :income_statement
+
+      def initialize(income_statement)
+        @income_statement = income_statement
+      end
+
+      def value
+        income_statement.diluted_normalized_eps.consecutive_growth
+      end
+
+      def description
+        "#{SAFE_VALUE} years (cont.) of increased earnings"
+      end
+
+      def valid?
+        value >= SAFE_VALUE
+      end
+    end
+
+    class TedsEPS < Rule
+      SAFE_VALUE = 5
+      attr_reader :income_statement
+
+      def initialize(income_statement)
+        @income_statement = income_statement
+      end
+
+      def value
+        income_statement.diluted_normalized_eps.consecutive_growth
+      end
+
+      def description
+        "TEDS RULE: #{SAFE_VALUE} qtrs (cont.) of increased earnings"
+      end
+
+      def valid?
+        value >= SAFE_VALUE
       end
     end
   end
