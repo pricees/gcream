@@ -1,4 +1,9 @@
+# Assume valus are ordered in descending order
 module ArrayExt
+  def growth?
+    self[0] > self[-1]
+  end
+
   def consecutive_growth
     max   = 100_000_000_000
     count = 0
@@ -11,12 +16,8 @@ module ArrayExt
     count
   end
 
-  def growth?
-    self[0] > self[-1]
-  end
-
   def decline?
-    self[-1] > self[0]
+    !growth?
   end
 
   def consecutive_decline
@@ -28,6 +29,7 @@ module ArrayExt
       count = i + 1
       min   = val
     end
+    count
   end
 end
 
