@@ -15,23 +15,15 @@ module Gcream
       ]
     end
 
-    class Rule
-      attr_reader :statement, :frequency
-
-      def initialize(statement, frequency = :Quarters)
-        @statement = statement
-        @frequency = frequency
-      end
-
-      def report
-       [ description, value, valid? ]
-      end
-    end
-
     # Operating activities are the machinery of the business, this should
     # be increasing
     class CashFromOperatingActivities < Rule
+
       VALUE = 4
+
+      def initialize(statement, value = VALUE, frequency = :Quarters)
+        super
+      end
 
       def value
         statement.cash_from_operating_activities.consecutive_growth
@@ -42,7 +34,7 @@ module Gcream
       end
 
       def valid?
-        value >= VALUE
+        value >= rule_value
       end
     end
     
@@ -58,6 +50,10 @@ module Gcream
     class CashFromInvestingActivities < Rule
       VALUE = 4
 
+      def initialize(statement, value = VALUE, frequency = :Quarters)
+        super
+      end
+
       def value
         statement.cash_from_investing_activities.consecutive_decline
       end
@@ -67,7 +63,7 @@ module Gcream
       end
 
       def valid?
-        value >= VALUE
+        value >= rule_value
       end
     end
 
@@ -80,6 +76,10 @@ module Gcream
     class CashFromFinancingActivities < Rule
       VALUE = 4
 
+      def initialize(statement, value = VALUE, frequency = :Quarters)
+        super
+      end
+
       def value
         statement.cash_from_financing_activities.consecutive_decline
       end
@@ -89,7 +89,7 @@ module Gcream
       end
 
       def valid?
-        value >= VALUE
+        value >= rule_value
       end
     end
   end
