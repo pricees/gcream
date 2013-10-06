@@ -1,11 +1,26 @@
 module Gcream
   module CashFlowRules
 
-    class Rule
-      attr_reader :cash_flow
+    def self.print_nice(ary, size = 20)
+    end
 
-      def initialize(cash_flow)
-        @cash_flow = cash_flow
+    def self.new(cash_flow)
+      [
+        CashFromOperatingActivities.new(cash_flow.qtr, "Quarters").report,
+        CashFromInvestingActivities.new(cash_flow.qtr, "Quarters").report,
+        CashFromFinancingActivities.new(cash_flow.qtr, "Quarters").report,
+        CashFromOperatingActivities.new(cash_flow.yr, "Years").report,
+        CashFromInvestingActivities.new(cash_flow.yr, "Years").report,
+        CashFromFinancingActivities.new(cash_flow.yr, "Years").report,
+      ]
+    end
+
+    class Rule
+      attr_reader :statement, :frequency
+
+      def initialize(statement, frequency = :Quarters)
+        @statement = statement
+        @frequency = frequency
       end
 
       def report
@@ -19,11 +34,11 @@ module Gcream
       VALUE = 4
 
       def value
-        cash_flow.cash_from_operating_activities.consecutive_growth
+        statement.cash_from_operating_activities.consecutive_growth
       end
 
       def description
-        "Years of continuous operating activities growth > #{VALUE} years"
+        "#{frequency} of continuous operating activities growth > #{VALUE} #{frequency}"
       end
 
       def valid?
@@ -44,11 +59,11 @@ module Gcream
       VALUE = 4
 
       def value
-        cash_flow.cash_from_investing_activities.consecutive_decline
+        statement.cash_from_investing_activities.consecutive_decline
       end
 
       def description
-        "Years of continuous investing activities growth > #{VALUE} years"
+        "#{frequency} of continuous investing activities growth > #{VALUE} #{frequency}"
       end
 
       def valid?
@@ -66,11 +81,11 @@ module Gcream
       VALUE = 4
 
       def value
-        cash_flow.cash_from_financing_activities.consecutive_decline
+        statement.cash_from_financing_activities.consecutive_decline
       end
 
       def description
-        "Years of continuous financing activities decline > #{VALUE} years"
+        "#{frequency} of continuous financing activities decline > #{VALUE} #{frequency}"
       end
 
       def valid?
