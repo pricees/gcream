@@ -57,7 +57,7 @@ module Gcream
   end
 
   class ConsecutiveGrowthRule < ConsecutiveRule
-    def initialize(statement, attribute, rule_value, frequency)
+    def initialize(statement, attribute, rule_value, frequency = nil)
       super statement, attribute, rule_value, frequency, :growth
     end
   end

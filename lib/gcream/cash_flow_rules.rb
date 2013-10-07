@@ -17,28 +17,18 @@ module Gcream
 
     # Operating activities are the machinery of the business, this should
     # be increasing
-    class CashFromOperatingActivities < Rule
-
+    class CashFromOperatingActivities < ConsecutiveGrowthRule
       VALUE = 4
 
       def initialize(statement, value = VALUE, frequency = :Quarters)
-        super
-      end
-
-      def value
-        statement.cash_from_operating_activities.consecutive_growth
+        super statement, :cash_from_operating_activities, value, frequency
       end
 
       def description
-        "#{frequency} of continuous operating activities growth > #{VALUE} #{frequency}"
-      end
-
-      def valid?
-        value >= rule_value
+        "Operating Activities: #{super}"
       end
     end
     
-
     # Investing Activities including buying raw materials, expanding factories,
     # or investing in other companyies.
     #
@@ -47,23 +37,15 @@ module Gcream
     #
     # Positive cash means that the company sold something.  We should
     # investigate this
-    class CashFromInvestingActivities < Rule
+    class CashFromInvestingActivities < ConsecutiveDeclineRule
       VALUE = 4
 
       def initialize(statement, value = VALUE, frequency = :Quarters)
-        super
-      end
-
-      def value
-        statement.cash_from_investing_activities.consecutive_decline
+        super statement, :cash_from_investing_activities, value, frequency
       end
 
       def description
-        "#{frequency} of continuous investing activities growth > #{VALUE} #{frequency}"
-      end
-
-      def valid?
-        value >= rule_value
+        "Investing Activities: #{super}"
       end
     end
 
@@ -73,23 +55,16 @@ module Gcream
     # If its positive, it probably sold debt, or stock. 
     #
     # Look for a negative trend
-    class CashFromFinancingActivities < Rule
+    class CashFromFinancingActivities < ConsecutiveDeclineRule
+
       VALUE = 4
 
       def initialize(statement, value = VALUE, frequency = :Quarters)
-        super
-      end
-
-      def value
-        statement.cash_from_financing_activities.consecutive_decline
+        super statement, :cash_from_financing_activities, value, frequency
       end
 
       def description
-        "#{frequency} of continuous financing activities decline > #{VALUE} #{frequency}"
-      end
-
-      def valid?
-        value >= rule_value
+        "Financing Activities: #{super}"
       end
     end
   end

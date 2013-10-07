@@ -1,26 +1,16 @@
 module Gcream
   module IncomeStatementRules
 
-    class EPS < Rule
-      SAFE_VALUE = 5
-      attr_reader :income_statement
+    class EPS < ConsecutiveGrowthRule
+      VALUE = 5
 
-      def initialize(income_statement)
-        @income_statement = income_statement
-      end
-
-      def value
-        income_statement.diluted_normalized_eps.consecutive_growth
+      def initialize(statement, value = VALUE)
+        super statement, :diluted_normalized_eps, value
       end
 
       def description
-        "#{SAFE_VALUE} years (cont.) of increased earnings"
-      end
-
-      def valid?
-        value >= SAFE_VALUE
+        "EPS: #{super}"
       end
     end
-
   end
 end

@@ -32,12 +32,6 @@ module Gcream
   #
   class BuffettRules
 
-    class Rule
-      def report
-       [ description, value, valid? ]
-      end
-    end
-
     def initialize(g_skrilla)
       @g_skrilla = g_skrilla
     end
@@ -68,27 +62,22 @@ module Gcream
     #
     # Watch out for debt, it will kill you
     class CurrentRatio < Rule
-      SAFE_VALUE = 1.5
-      attr_reader :bs
+      VALUE = 1.5
 
-      def initialize(balance_sheet)
-        @bs = balance_sheet
+      def initialize(balance_sheet, value = VALUE, frequency = :Quarter)
+        super
       end
 
       def description
-        "Current Assets / Current Liabilities >= #{SAFE_VALUE}"
+        "Current Assets / Current Liabilities >= #{value}"
       end
 
       def value
         @value ||= begin
-                     ca = bs.total_current_assets.first.to_f
-                     cl = bs.total_current_liabilities.first.to_f
+                     ca = statement.total_current_assets.first.to_f
+                     cl = statement.total_current_liabilities.first.to_f
                      cl.zero? ? 0 : ca.fdiv(cl).round(2)
                    end
-      end
-
-      def valid?
-        value >= SAFE_VALUE
       end
     end
 
@@ -97,11 +86,10 @@ module Gcream
     # Watch out for debt, it will kill you
     class DebtToEquity < Rule
 
-      SAFE_VALUE = 0.5
-      attr_reader :bs
+      VALUE = 0.5
 
-      def initialize(balance_sheet)
-        @bs = balance_sheet
+      def initialize(balance_sheet, value = VALUE, frequency = :Quarter)
+        super
       end
 
       def description
@@ -110,14 +98,14 @@ module Gcream
 
       def value
         @value ||= begin
-                     td = bs.total_debt.first.to_f
-                     te = bs.total_equity.first.to_f
+                     td = statement.total_debt.first.to_f
+                     te = statement.total_equity.first.to_f
                      te.zero? ? 0 : td.fdiv(te).round(2)
                    end
       end
 
       def valid?
-        value <= SAFE_VALUE
+        value <= VALUE
       end
     end
 
@@ -151,7 +139,7 @@ module Gcream
       end
 
       def valid?
-        @value > summary.price
+        value > summary.price
       end
     end
 
