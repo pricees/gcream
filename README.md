@@ -1,6 +1,6 @@
 # Gcream
 
-TODO: Write a gem description
+Rules and strategies to pick stocks, based on fundamental analysis
 
 ## Installation
 

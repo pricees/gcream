@@ -2,11 +2,10 @@
 *.rbc
 .bundle
 .config
-.yardoc
 Gemfile.lock
 InstalledFiles
+.yardoc
 _yardoc
-coverage
 doc/
 lib/bundler/man
 pkg
@@ -15,3 +14,4 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+
