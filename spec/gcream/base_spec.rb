@@ -1,3 +1,4 @@
+require_relative "../spec_helper.rb"
 require_relative "../../lib/gcream.rb"
 
 describe Gcream::Base do
@@ -20,7 +21,7 @@ describe Gcream::Base do
   end
 
   describe "#rules" do
-    it "has them" do
+    it "has them", broken: true do
       expect(subject.rules).to_not be_nil
     end
   end
