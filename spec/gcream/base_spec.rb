@@ -2,32 +2,26 @@ require_relative "../../lib/gcream.rb"
 
 describe Gcream::Base do
 
-  let!(:g_skrilla) do
-    dir = File.dirname(__FILE__) + "/.."
-    GSkrilla::Summary.any_instance.stub(:open).and_return(File.read("#{dir}/data/aapl.html.summary"))
-    GSkrilla::Base.any_instance.stub(:open).and_return(File.read("#{dir}/data/aapl.html"))
-    GSkrilla::build("aapl")
-  end
+  let (:symbol) { "XXX" }
+  let (:adapter) { double(build: :financials) }
 
-  let(:gcream) do
-    gcream = Gcream::Base.new("aapl")
-    gcream.instance_variable_set("@g_skrilla", g_skrilla)
-    gcream
-  end
+  subject { Gcream::Base.new symbol, adapter }
 
   describe "#new" do
-    it "requires an argument" do
+    it "requires arguments" do
       expect { Gcream::Base.new }.to raise_error(ArgumentError)
     end
   end
 
-  describe "#report" do
-    let(:report) { gcream.report }
+  describe "#financials" do
+    it "returns non fill" do
+      expect(subject.financials).to_not be_nil
+    end
+  end
 
-    it "prints a header" do
-      expect(report).to_not be_nil
+  describe "#rules" do
+    it "has them" do
+      expect(subject.rules).to_not be_nil
     end
   end
 end
-
-

@@ -2,22 +2,14 @@ require_relative "../../lib/gcream.rb"
 
 describe Gcream::BuffettRules do
 
-  let (:g_skrilla) do
-    dir  = File.dirname(__FILE__) + "/.."
-    data = File.read("#{dir}/data/aapl.html")
-    GSkrilla::Summary.any_instance.stub(:open).and_return(
-      File.read("#{dir}/data/aapl.html.summary")
-    )
-    GSkrilla::Base.any_instance.stub(:open).and_return(data)
-    GSkrilla::build("aapl")
-  end
-
-  it "loads g_skrilla" do
-    #p g_skrilla
-  end
-
   describe "::CurrentRatio" do
-    let(:qtr) { g_skrilla.balance_sheets.qtr }
+    let (:financials) do
+      data = double(total_current_assets: [1.88],
+                    total_current_liabilities: [1])
+      double(balance_sheets: double(qtr: data))
+    end
+
+    let(:qtr) { financials.balance_sheets.qtr }
 
     it "returns the #value" do
      res = Gcream::BuffettRules::CurrentRatio.new(qtr)
@@ -31,7 +23,12 @@ describe Gcream::BuffettRules do
   end
 
   describe "::DebtToEquity" do
-    let(:qtr) { g_skrilla.balance_sheets.qtr }
+    let (:financials) do
+      data = double(total_debt: [0.14], total_equity: [1])
+      double(balance_sheets: double(qtr: data))
+    end
+
+    let(:qtr) { financials.balance_sheets.qtr }
 
     it "returns the #value" do
      res = Gcream::BuffettRules::DebtToEquity.new(qtr)
@@ -45,16 +42,15 @@ describe Gcream::BuffettRules do
   end
 
   describe "::PriceToEarnings" do
-    let(:summary) { g_skrilla.summary }
-
+    let (:financials)  { double(summary: double(pe: 12.06)) }
 
     it "returns the #value" do
-     res = Gcream::BuffettRules::PriceToEarnings.new(summary)
+     res = Gcream::BuffettRules::PriceToEarnings.new(financials.summary)
      expect(res.value).to eq(12.06)
     end
 
     it "returns valid?" do
-     res = Gcream::BuffettRules::PriceToEarnings.new(summary)
+     res = Gcream::BuffettRules::PriceToEarnings.new(financials.summary)
      expect(res.valid?).to be_true
     end
   end
