@@ -1,6 +1,6 @@
 module Gcream
   module Rule
-    class BookValuePerShare
+    class BookValuePerShare < Base
       attr_reader :balance_sheet
 
       def initialize(balance_sheet)
