@@ -16,6 +16,6 @@ describe Gcream::Rule::CurrentRatio do
   end
 
   it "returns valid?" do
-   expect(subject.valid?).to be_true
+   expect(subject).to be_valid
   end
 end
