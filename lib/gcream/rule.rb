@@ -3,4 +3,4 @@ module Gcream
   end
 end
 
-require_relative "rule/base.rb"
+Dir["#{File.dirname(__FILE__)}/rule/*.rb"].each { |file| require file }

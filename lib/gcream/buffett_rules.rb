@@ -2,7 +2,7 @@ module Gcream
 
   # Buffetts Rules
   # #1 Vigilant Leadership  (2 rules)
-  #   Current Ratio > 1.5
+  #   Current Ratio > 1.5   Rule::CurrentRatio
   #   Debt / Equit  < 0.5
   #
   # #2 A stock must have long term prospects (0 Rules)
@@ -34,51 +34,6 @@ module Gcream
 
     def initialize(g_skrilla)
       @g_skrilla = g_skrilla
-    end
-
-    class BookValuePerShare
-      attr_reader :balance_sheet
-
-      def initialize(balance_sheet)
-        @balance_sheet = balance_sheet
-      end
-
-      def value
-        equity = balance_sheet.total_equity.first
-        total_shares = balance_sheet.total_common_shares_outstanding.first
-        equity.fdiv(total_shares).round(3)
-      end
-
-      def description
-        "Book Value: Total Equity / Common Shares"
-      end
-
-      def report
-        [ description, value, "" ]
-      end
-    end
-
-    # Buffetts Rule #1: Vigiliant Leadership 2/2
-    #
-    # Watch out for debt, it will kill you
-    class CurrentRatio < Rule::Base
-      VALUE = 1.5
-
-      def initialize(balance_sheet, value = VALUE, frequency = :Quarter)
-        super
-      end
-
-      def description
-        "Current Assets / Current Liabilities >= #{value}"
-      end
-
-      def value
-        @value ||= begin
-                     ca = statement.total_current_assets.first.to_f
-                     cl = statement.total_current_liabilities.first.to_f
-                     cl.zero? ? 0 : ca.fdiv(cl).round(2)
-                   end
-      end
     end
 
     # Buffetts Rule #1: Vigiliant Leadership 1/2
