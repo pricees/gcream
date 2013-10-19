@@ -38,35 +38,5 @@ module Gcream
       end
     end
 
-    class ConsecutiveRule < Base
-
-      attr_reader :type, :attribute
-
-      def initialize(statement, attribute, rule_value, frequency, type)
-        super statement, rule_value, frequency
-        @attribute = attribute
-        @type      = type
-      end
-
-      def value
-        statement.send(attribute).send :"consecutive_#{type}"
-      end
-
-      def description
-        "#{rule_value} or more #{frequency} of consecutive #{type}"
-      end
-    end
-
-    class ConsecutiveGrowthRule < ConsecutiveRule
-      def initialize(statement, attribute, rule_value, frequency = nil)
-        super statement, attribute, rule_value, frequency, :growth
-      end
-    end
-
-    class ConsecutiveDeclineRule < ConsecutiveRule
-      def initialize(statement, attribute, rule_value, frequency)
-        super statement, attribute, rule_value, frequency, :decline
-      end
-    end
   end
 end

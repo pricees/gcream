@@ -1,5 +1,3 @@
-require_relative "../../lib/gcream.rb"
-
 describe Gcream::IncomeStatementRules do
 
   let (:g_skrilla) do

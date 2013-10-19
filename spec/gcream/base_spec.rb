@@ -1,5 +1,4 @@
 require_relative "../spec_helper.rb"
-require_relative "../../lib/gcream.rb"
 
 describe Gcream::Base do
 

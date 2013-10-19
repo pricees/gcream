@@ -1,5 +1,3 @@
-require_relative "../../lib/gcream.rb"
-
 describe Gcream::CashFlowRules do
 
   let (:financials) do

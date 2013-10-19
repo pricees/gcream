@@ -17,7 +17,7 @@ module Gcream
 
     # Operating activities are the machinery of the business, this should
     # be increasing
-    class CashFromOperatingActivities < Rule::ConsecutiveGrowthRule
+    class CashFromOperatingActivities < Rule::ConsecutiveGrowth
       VALUE = 4
 
       def initialize(statement, value = VALUE, frequency = :Quarters)
@@ -37,7 +37,7 @@ module Gcream
     #
     # Positive cash means that the company sold something.  We should
     # investigate this
-    class CashFromInvestingActivities < Rule::ConsecutiveDeclineRule
+    class CashFromInvestingActivities < Rule::ConsecutiveDecline
       VALUE = 4
 
       def initialize(statement, value = VALUE, frequency = :Quarters)
@@ -55,7 +55,7 @@ module Gcream
     # If its positive, it probably sold debt, or stock. 
     #
     # Look for a negative trend
-    class CashFromFinancingActivities < Rule::ConsecutiveDeclineRule
+    class CashFromFinancingActivities < Rule::ConsecutiveDecline
 
       VALUE = 4
 
