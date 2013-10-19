@@ -61,7 +61,7 @@ module Gcream
     # Buffetts Rule #1: Vigiliant Leadership 2/2
     #
     # Watch out for debt, it will kill you
-    class CurrentRatio < Rule
+    class CurrentRatio < Rule::Base
       VALUE = 1.5
 
       def initialize(balance_sheet, value = VALUE, frequency = :Quarter)
@@ -84,7 +84,7 @@ module Gcream
     # Buffetts Rule #1: Vigiliant Leadership 1/2
     #
     # Watch out for debt, it will kill you
-    class DebtToEquity < Rule
+    class DebtToEquity < Rule::Base
 
       VALUE = 0.5
 
@@ -119,7 +119,7 @@ module Gcream
     #       (P / E) * (P / BV) = 22.5
     #       P * P = 22.5 * E * BV
     #       P = SQRT(22.5 * E * BV)
-    class GrahamsNumber < Rule
+    class GrahamsNumber < Rule::Base
 
       attr_reader :summary, :balance_sheet
 
@@ -147,7 +147,7 @@ module Gcream
     #  PriceToBookValuePerShare
     #
     #
-    class Safety < Rule
+    class Safety < Rule::Base
       SAFE_VALUE = 20
       attr_reader :summary, :balance_sheet
 
@@ -173,7 +173,7 @@ module Gcream
     end
 
 
-    class PriceToBookValuePerShare < Rule
+    class PriceToBookValuePerShare < Rule::Base
       SAFE_VALUE = 1.5
       attr_reader :summary, :balance_sheet
 
@@ -198,7 +198,7 @@ module Gcream
       end
     end
 
-    class PriceToEarnings < Rule
+    class PriceToEarnings < Rule::Base
       SAFE_VALUE = 15
       attr_reader :summary
 
@@ -219,7 +219,7 @@ module Gcream
       end
     end
 
-    class EPS < Rule
+    class EPS < Rule::Base
       SAFE_VALUE = 5
       attr_reader :income_statement
 
@@ -240,7 +240,7 @@ module Gcream
       end
     end
 
-    class TedsEPS < Rule
+    class TedsEPS < Rule::Base
       SAFE_VALUE = 5
       attr_reader :income_statement
 

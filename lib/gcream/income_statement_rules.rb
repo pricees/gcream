@@ -1,7 +1,7 @@
 module Gcream
   module IncomeStatementRules
 
-    class EPS < ConsecutiveGrowthRule
+    class EPS < Rule::ConsecutiveGrowthRule
       VALUE = 5
 
       def initialize(statement, value = VALUE)
