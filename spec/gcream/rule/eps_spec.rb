@@ -15,7 +15,7 @@ describe Gcream::Rule::EPS do
   describe "#valid?" do
     let(:value) { Gcream::Rule::EPS::VALUE }
     it "is valid when consecutive grown is >= VALUE" do
-      subject.income_statement.diluted_normalized_eps.
+      subject.statement.diluted_normalized_eps.
         stub(:consecutive_growth).
         and_return(value)
 
@@ -23,7 +23,7 @@ describe Gcream::Rule::EPS do
     end
 
     it "is not valid when consecutive grown is < VALUE" do
-      subject.income_statement.diluted_normalized_eps.
+      subject.statement.diluted_normalized_eps.
         stub(:consecutive_growth).
         and_return(value - 1)
 
