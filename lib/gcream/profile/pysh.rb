@@ -26,10 +26,42 @@
 #   What does the company do?  Sector, etc?
 #
 #
+# preston pysh,  return on equity > 7%;
+# eps / equity
+#
+# Income Statement should have EPS rules
+# ====================
+# ====================
+# OWNERS EARNINGS: 
+# owners earnings =
+# + net income
+# + depreciation
+# + amortization
+# + non cash items
+# +/- deferred taxes
+# - capital expenditures  (whats is spent on business to keep running business:
+#   computers, plant, etc)
+# 
+# =======WHICH REALLY MEANS: cash of operatings activities - capital expenditures
+# 
+# OWNERS EARNINGS: cash from operatings activities - capital expenditures
+# 
+# owner's earnings per share = owners earnings / number of shares (diluted)
+# owners earnings per share vs (accounting) eps
+# 
+# accounting earnings: eps
+# buffetts owners earnings:
+# actually earnings:  dividend + book value
+# 
+# buffett: tangible assets need to be replaced/maintained
+# 
+# =======================
+# make sure you check these summaries
+# 
+# compare 10 years of owners earnings
+#
 # My rules:
 #   Look for 4 quarters of increasing growth, seasonal companies be damned!
-#
-#
 module Gcream
   module Strategy
     class Pysh
