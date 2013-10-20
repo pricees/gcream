@@ -16,7 +16,8 @@
 # and (52 week high will do)
 # -Fewer than 20 million common shares outstanding.
 # 
-# ** look at quarterly earning for change in trend or qoq for cyclical companiesa
+# ** look at quarterly earning for change in trend or qoq for 
+#   cyclical companies
 # 
 # 
 # ***
@@ -46,33 +47,44 @@ module Gcream
         @profile = run_rules!
       end
 
+
+      def total_shares_rule(valid_shares = 20_000_000)
+        shares = financials.balance_sheet["qtr"].
+          total_common_shares_outstanding.first
+
+        shares < (valid_shares/1_000)  # shares are in thousnds
+      end
+
+      def price_rule(price_pct = 15)
+        price = financials.summary.price
+        yr_hi = financials.summary.year_hi
+
+        (yr_hi - price).fdiv(yr_hi).abs < price_pct
+      end
+
+      def run_rules
+        price_to_book_value = PriceToBookValuePerShare.new(
+          financials.summary, financials.balance_sheet["qtr"], 1)
+      end
+
       def run_rules
         price_to_book_value = PriceToBookValuePerShare.new(
           financials.summary, financials.balance_sheet["qtr"], 1)
 
         {
-          "Positive Earnings for quarters" => 
+          "Positive Earnings 12 Months (4 quarters)" => 
             EPS.new(financials.income_statement["qtr"], 4),
           "Price to book value < 1.0" => price_to_book_value,
           "Accelerated Quarterly Earnings" => 
-            AcceleratedEarnings.new(financials.income_statement["qtr"]),
+            ConsecutiveAcceleratedGrowth.
+              new(financials.income_statement["qtr"]),
           "Positive Earnings for 5 years (growth rate)" => 
             EPS.new(financials.income_statement["yr"], 5),
           "Positive pretax profit margin (use net profit margin)" => 
             NetProfitMargin.new(financials.income_statement["qtr"]),
-
-# -Relative strength rank of at least 70; ***
-# -Relative strength rank of the stock in the current quarter is greater than the
-# rank in the previous quarter; ***
-# -O'Neil Datagraph rating of at least 70;
-# -Stock selling within 15% of its maximum price during the previous two years;
-# and (52 week high will do)
-# -Fewer than 20 million common shares outstanding.
-# 
-# ** look at quarterly earning for change in trend or qoq for cyclical companiesa
-# 
-
-
+          "Current price within 15% of 52 week high" =>
+            price_rule,
+          "Fewer than 20MM shares" => total_shares_rule
         }
       end
     end
