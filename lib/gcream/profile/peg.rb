@@ -2,7 +2,7 @@
 # 
 # Growth rates of 20% are not sustainable in long term (yoy)
 # 
-# positive earnings for last 12 months
+# - positive earnings for last 12 months (4 past qtrs, of growth)
 # 
 # -Price-to-book-value ratio less than 1.00;
 # -Accelerating quarterly earnings; **
@@ -34,6 +34,47 @@
 module Gcream
   module Profile
     class PEG
+      include Gcream::Rule
+
+      attr_reader :profile
+
+      def intialize(financials)
+        @financials = financials
+      end
+
+      def run
+        @profile = run_rules!
+      end
+
+      def run_rules
+        price_to_book_value = PriceToBookValuePerShare.new(
+          financials.summary, financials.balance_sheet["qtr"], 1)
+
+        {
+          "Positive Earnings for quarters" => 
+            EPS.new(financials.income_statement["qtr"], 4),
+          "Price to book value < 1.0" => price_to_book_value,
+          "Accelerated Quarterly Earnings" => 
+            AcceleratedEarnings.new(financials.income_statement["qtr"]),
+          "Positive Earnings for 5 years (growth rate)" => 
+            EPS.new(financials.income_statement["yr"], 5),
+          "Positive pretax profit margin (use net profit margin)" => 
+            NetProfitMargin.new(financials.income_statement["qtr"]),
+
+# -Relative strength rank of at least 70; ***
+# -Relative strength rank of the stock in the current quarter is greater than the
+# rank in the previous quarter; ***
+# -O'Neil Datagraph rating of at least 70;
+# -Stock selling within 15% of its maximum price during the previous two years;
+# and (52 week high will do)
+# -Fewer than 20 million common shares outstanding.
+# 
+# ** look at quarterly earning for change in trend or qoq for cyclical companiesa
+# 
+
+
+        }
+      end
     end
   end
 end

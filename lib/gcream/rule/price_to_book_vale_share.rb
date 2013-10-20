@@ -1,15 +1,19 @@
 module Gcream
   module Rule
-    class PriceToBookValuePerShare < Rule::Base
-      SAFE_VALUE = 1.5
+    class PriceToBookValuePerShare < Base
+      VALUE = 1.5
       attr_reader :summary, :balance_sheet
 
-      def initialize(summary, balance_sheet)
+      def initialize(summary, balance_sheet, valid_value = VALUE)
         @summary, @balance_sheet = summary, balance_sheet
       end
 
       def description
-        "Price / Book Value should be <= 1.5"
+        "Price / Book Value should be <= #{valid_value}"
+      end
+
+      def valid_value
+        @valid_value ||= VALUE
       end
 
       def value
@@ -21,7 +25,7 @@ module Gcream
       end
 
       def valid?
-        value <= SAFE_VALUE
+        value <= valid_value
       end
     end
   end

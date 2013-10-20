@@ -1,16 +1,17 @@
+#
+#
 module Gcream
   module Rule
     class EPS < ConsecutiveGrowth 
 
       VALUE = 5
-      attr_reader :income_statement
 
-      def initialize(statement, value = VALUE)
-        super statement, :diluted_normalized_eps, value
+      def initialize(income_statement, value = VALUE)
+        super income_statement, :diluted_normalized_eps, value
       end
 
       def description
-        "EPS: #{super}"
+        "Consecutive growth using the diluted normalized eps"
       end
 
       def valid?
