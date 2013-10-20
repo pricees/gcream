@@ -2,7 +2,7 @@ module Gcream
   module Rule
     class EPS < Base
 
-      SAFE_VALUE = 5
+      VALUE = 5
       attr_reader :income_statement
 
       def initialize(income_statement)
@@ -14,11 +14,11 @@ module Gcream
       end
 
       def description
-        "#{SAFE_VALUE} years (cont.) of increased earnings"
+        "#{VALUE} years (cont.) of increased earnings"
       end
 
       def valid?
-        value >= SAFE_VALUE
+        value >= VALUE
       end
     end
   end

@@ -11,11 +11,11 @@ module Gcream
     #       P * P = 22.5 * E * BV
     #       P = SQRT(22.5 * E * BV)
     class GrahamsNumber < Base
+      attr_reader :summary, :price_to_book_value
 
-      attr_reader :summary, :balance_sheet
-
-      def initialize(summary, balance_sheet)
-        @summary, @balance_sheet = summary, balance_sheet
+      def initialize(price_to_book_value, summary)
+        @price_to_book_value = price_to_book_value
+        @summary = summary
       end
 
       def description 
@@ -23,14 +23,11 @@ module Gcream
       end
 
       def value
-        @value ||= begin
-                     tmp = PriceToBookValuePerShare.new(summary, balance_sheet)
-                     Math.sqrt(22.5 * summary.eps * tmp.value).round(2)
-                   end
+        @value ||= Math.sqrt(22.5 * summary.eps * price_to_book_value).round(2)
       end
 
       def valid?
-        value > summary.price
+        value < summary.price
       end
     end
   end

@@ -1,30 +1,23 @@
 module Gcream
   module Rule
-    #  PriceToBookValuePerShare
-    #
-    #
-    class Safety < Base
-      SAFE_VALUE = 20
-      attr_reader :summary, :balance_sheet
+    class MarginOfSafety < Base
+      VALUE = 20
+      attr_reader :price_to_book_ratio 
 
-      def initialize(summary, balance_sheet)
-        @summary, @balance_sheet = summary, balance_sheet
+      def initialize(price_to_book_ratio)
+        @price_to_book_ratio = price_to_book_ratio
       end
 
       def description
-        "Safety (1/P/BV) > #{20}"
+        "Safety (1/P/BV) > #{VALUE}"
       end
 
       def value
         (1.fdiv(price_to_book_ratio) * 100).round(2)
       end
 
-      def price_to_book_ratio
-        PriceToBookValuePerShare.new(summary, balance_sheet).value
-      end
-
       def valid?
-        value >= SAFE_VALUE
+        value >= VALUE
       end
     end
   end
