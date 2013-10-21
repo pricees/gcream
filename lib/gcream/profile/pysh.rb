@@ -33,17 +33,11 @@
 # ====================
 # ====================
 # OWNERS EARNINGS: 
-# owners earnings =
-# + net income
-# + depreciation
-# + amortization
-# + non cash items
-# +/- deferred taxes
-# - capital expenditures  (whats is spent on business to keep running business:
-#   computers, plant, etc)
+# owners earnings = net income + depr. + amort. + non cash items
+#   +/- deferred taxes 
+#   - capital expenditures  (spent to keep running business: computers, plant, etc)
 # 
-# =======WHICH REALLY MEANS: cash of operatings activities - capital expenditures
-# 
+# NOTE: This boils down to
 # OWNERS EARNINGS: cash from operatings activities - capital expenditures
 # 
 # owner's earnings per share = owners earnings / number of shares (diluted)
@@ -65,6 +59,71 @@
 module Gcream
   module Strategy
     class Pysh
+      include Gcream::Rule
+
+      attr_reader :profile
+      attr_writer :less_than_total_shares, :price_pct_of_52_week_hi
+
+      def initialize(financials)
+        @financials = financials
+      end
+
+      def run
+        @profile = run_rules!
+      end
+
+      def valid_total_shares?
+        shares = financials.balance_sheet["qtr"].
+          total_common_shares_outstanding.first
+
+        shares <= less_than_total_shares
+      end
+
+      def valid_price_rule?
+        price = financials.summary.price
+        yr_hi = financials.summary.year_hi
+
+        (yr_hi - price).fdiv(yr_hi).abs <= price_pct_of_52_week_hi
+      end
+
+      def run_rules
+        price_to_book_value = PriceToBookValuePerShare.new(
+          financials.summary, financials.balance_sheet["qtr"], 1)
+
+        vigiliant_leadership.merge(stable_and_understandable).
+          merge(teds_rules)
+      end
+
+      # #1 Vigilant Leadership  (2 rules)
+      #   Current Ratio > 1.5   Rule::CurrentRatio
+      #   Debt / Equity  < 0.5
+      def viligant_leadership
+        qtr_bs = financials.balance_sheet["qtr"]
+        { 
+          "Current Ratio" => CurrentRatio.new(qtr_bs),
+          "Debt-to-Equity" => DebtToEquity.new(qtr_bs),
+        }
+      end
+      
+      def stable_and_understandable
+        yr_is = financials.income_statement["yr"]
+        yr_bs = financials.balance_sheet["yr"]
+
+        {
+          "Increasing YoY (diluted normalized) EPS" => EPS.new(yr_is),
+          "Increasing YoY equity" => TotalEquity.new(yr_bs),
+          "Increasing BV " => BookValuePerShareGrowth.new(yr_bs),
+          "Increasing Debt-to-Equity" => DebtToEquityGrowth.new(yr_bs),
+        }
+      end
+
+      def teds_rules
+        qtr_is = financials.income_statement["qtr"]
+
+        {
+          "Increasing QoQ (diluted normalized) EPS" => EPS.new(qtr_is),
+        }
+      end
     end
   end
 end
