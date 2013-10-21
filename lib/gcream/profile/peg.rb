@@ -38,8 +38,9 @@ module Gcream
       include Gcream::Rule
 
       attr_reader :profile
+      attr_writer :less_than_total_shares, :price_pct_of_52_week_hi
 
-      def intialize(financials)
+      def initialize(financials)
         @financials = financials
       end
 
@@ -47,24 +48,18 @@ module Gcream
         @profile = run_rules!
       end
 
-
-      def total_shares_rule(valid_shares = 20_000_000)
+      def valid_total_shares?
         shares = financials.balance_sheet["qtr"].
           total_common_shares_outstanding.first
 
-        shares < (valid_shares/1_000)  # shares are in thousnds
+        shares <= less_than_total_shares
       end
 
-      def price_rule(price_pct = 15)
+      def valid_price_rule?
         price = financials.summary.price
         yr_hi = financials.summary.year_hi
 
-        (yr_hi - price).fdiv(yr_hi).abs < price_pct
-      end
-
-      def run_rules
-        price_to_book_value = PriceToBookValuePerShare.new(
-          financials.summary, financials.balance_sheet["qtr"], 1)
+        (yr_hi - price).fdiv(yr_hi).abs <= price_pct_of_52_week_hi
       end
 
       def run_rules
@@ -86,6 +81,14 @@ module Gcream
             price_rule,
           "Fewer than 20MM shares" => total_shares_rule
         }
+      end
+
+      def less_than_total_shares
+        @less_than_total_shares ||= 20_000_000
+      end
+
+      def price_pct_of_52_week_hi
+        @price_pct_of_52_week_hi ||= 0.15
       end
     end
   end
