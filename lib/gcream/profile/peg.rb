@@ -56,15 +56,15 @@ module Gcream
       end
 
       def valid_price_rule?
-        price = financials.summary.price
-        yr_hi = financials.summary.year_hi
-
-        (yr_hi - price).fdiv(yr_hi).abs <= price_pct_of_52_week_hi
+        high_52_week = financials.summary.percent_change_from_52wk_high.abs
+        high_52_week <= price_pct_of_52_week_hi
       end
 
       def run_rules
+        summary = financials.summary
+
         price_to_book_value = PriceToBookValuePerShare.new(
-          financials.summary, financials.balance_sheet["qtr"], 1)
+          summary, financials.balance_sheet["qtr"], 1)
 
         {
           "Positive Earnings 12 Months (4 quarters)" => 
@@ -78,8 +78,8 @@ module Gcream
           "Positive pretax profit margin (use net profit margin)" => 
             NetProfitMargin.new(financials.income_statement["qtr"]),
           "Current price within 15% of 52 week high" =>
-            price_rule,
-          "Fewer than 20MM shares" => total_shares_rule
+            PctOf52WeekHigh.new(summary.percent_change_from_52wk_high, 15),
+          "Fewer than 20MM shares" => FloatShares.new(summary.float_shares, 20_000_000)
         }
       end
 
@@ -88,7 +88,7 @@ module Gcream
       end
 
       def price_pct_of_52_week_hi
-        @price_pct_of_52_week_hi ||= 0.15
+        @price_pct_of_52_week_hi ||= 15
       end
     end
   end
