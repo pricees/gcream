@@ -105,6 +105,17 @@ module Gcream
         }
       end
       
+      # #3 A stock must be stable and understandable
+      #   Stable:
+      #   Earnings (EPS) increasing YoY for 5 years  (10 year summary MSN money)
+      #   Equity increasing YoY for 5 years
+      #   Msn Money -> "Key Ratios" -> 10 year summary for 
+      #     BV increasing YoY for 5 years
+      #     Debt/Equity decreasing YoY for 5 years
+      #
+      #   Understandable:
+      #   What does the company do?  Sector, etc?
+      #
       def stable_and_understandable
         yr_is = financials.income_statement["yr"]
         yr_bs = financials.balance_sheet["yr"]
