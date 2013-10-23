@@ -1,12 +1,12 @@
 describe Gcream::Rule::FloatShares do
 
   describe "#value" do
-    let(:summary) { double(float_shares: 20_000_000) }
+    let(:summary) { double(float_shares: 20) }
 
     subject { Gcream::Rule::FloatShares.new(summary.float_shares) }
 
     it "returns the value" do
-      expect(subject.value).to eq(20_000_000)
+      expect(subject.value).to eq(20)
     end
 
     context "shares are less than or equal to valid value" do
@@ -16,7 +16,7 @@ describe Gcream::Rule::FloatShares do
     end
 
     context "shares are greater than valid value" do
-      let(:summary) { double(float_shares: 19_000_000) }
+      let(:summary) { double(float_shares: 19) }
 
       subject { Gcream::Rule::FloatShares.new(summary.float_shares) }
 

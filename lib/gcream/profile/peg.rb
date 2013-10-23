@@ -5,22 +5,21 @@
 # - positive earnings for last 12 months (4 past qtrs, of growth)
 # 
 # -Price-to-book-value ratio less than 1.00;
-# -Accelerating quarterly earnings; **
+# -Accelerating quarterly earnings
 # -Positive five-year growth rate;
 # -Positive pretax profit margin;
-# -Relative strength rank of at least 70; ***
-# -Relative strength rank of the stock in the current quarter is greater than the
-# rank in the previous quarter; ***
-# -O'Neil Datagraph rating of at least 70;
-# -Stock selling within 15% of its maximum price during the previous two years;
-# and (52 week high will do)
 # -Fewer than 20 million common shares outstanding.
-# 
-# ** look at quarterly earning for change in trend or qoq for 
+# -Stock selling within 15% of its maximum price during the previous two years;
+#
+##############################################
+#
+# -Relative strength rank of at least 70
+# -Relative strength rank of the stock in the current quarter is greater than the rank in the previous quarter
+#
+# Additional notes:
+#   look at quarterly earning for change in trend or qoq for 
 #   cyclical companies
 # 
-# 
-# ***
 # 4 quarters of price changes (delta)
 # 0.40 * (price delta of current quarter)
 # 0.20 * (price delta of last quarter)
@@ -30,8 +29,6 @@
 # weighted price change
 # 
 # rank all symbols price weight price change, look for top 30% percentile 
-# 
-# 
 module Gcream
   module Profile
     class PEG
@@ -79,16 +76,8 @@ module Gcream
             NetProfitMargin.new(financials.income_statement["qtr"]),
           "Current price within 15% of 52 week high" =>
             PctOf52WeekHigh.new(summary.percent_change_from_52wk_high, 15),
-          "Fewer than 20MM shares" => FloatShares.new(summary.float_shares, 20_000_000)
+          "Fewer than 20MM shares" => FloatShares.new(summary.float_shares, 20)
         }
-      end
-
-      def less_than_total_shares
-        @less_than_total_shares ||= 20_000_000
-      end
-
-      def price_pct_of_52_week_hi
-        @price_pct_of_52_week_hi ||= 15
       end
     end
   end
