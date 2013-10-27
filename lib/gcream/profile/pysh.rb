@@ -123,10 +123,14 @@ module Gcream
         key_ratios = financials.key_ratios
 
         {
-          "CHECKIncreasing YoY (diluted normalized) EPS" => EPS.new(yr_is),
-          "Increasing YoY equity" => TotalEquity.new(yr_bs),
-          "Increasing BV " => BookValuePerShareGrowth.new(yr_bs, key_ratios),
-          "Increasing Debt-to-Equity" => DebtToEquityGrowth.new(yr_bs),
+          "CHECKIncreasing YoY (diluted normalized) EPS" => 
+            EPS.new(yr_is),
+          "Increasing YoY equity" => 
+            TotalEquity.new(yr_bs),
+          "Increasing Book Value Per Share Growth" =>
+            BookValuePerShareGrowth.new(yr_bs, key_ratios),
+          "Increasing Debt-to-Equity" => 
+            DebtToEquityGrowth.new(yr_bs),
         }
       end
 
@@ -136,10 +140,7 @@ module Gcream
 
       def teds_rules
         qtr_is = financials.income_statements["qtr"]
-
-        {
-          "Increasing QoQ (diluted normalized) EPS" => EPS.new(qtr_is),
-        }
+        { "Increasing QoQ (diluted normalized) EPS" => EPS.new(qtr_is), }
       end
     end
   end

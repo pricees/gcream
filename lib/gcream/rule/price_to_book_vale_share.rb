@@ -2,11 +2,10 @@ module Gcream
   module Rule
     class PriceToBookValuePerShare < Base
       VALUE = 1.5
-      attr_reader :summary, :balance_sheet
+      attr_reader :value
 
       def initialize(summary, balance_sheet, valid_value = VALUE)
-        value(summary)
-        book_value_per_share(balance_sheet)
+        set_value(summary, balance_sheet)
       end
 
       def description
@@ -17,12 +16,12 @@ module Gcream
         @valid_value ||= VALUE
       end
 
-      def value(summary)
-        @value ||= summary.price.fdiv(book_value_per_share).round(2)
-      end
-
-      def book_value_per_share(balance_sheet)
-        @bv_per_share ||= BookValuePerShare.new(balance_sheet).value
+      def set_value(summary, balance_sheet)
+        @value ||= begin
+                     bv_per_share = BookValuePerShare.
+                       new(balance_sheet, summary).value
+                     summary.price.fdiv(bv_per_share).round(2)
+                   end
       end
 
       def valid?

@@ -3,8 +3,8 @@ module Gcream
     class BookValuePerShare < Base
 
       attr_reader :value
-      def initialize(balance_sheet)
-        set_value(balance_sheet)
+      def initialize(balance_sheet, summary)
+        set_value(balance_sheet, summary)
       end
 
       def description
@@ -17,12 +17,10 @@ module Gcream
 
       private
 
-      def set_value(balance_sheet)
+      def set_value(balance_sheet, summary)
         @value ||= begin
-                     equity = balance_sheet.total_equity.first
-                     total_shares = balance_sheet.
-                       total_common_shares_outstanding.
-                       first
+                     equity       = balance_sheet.total_equity.first
+                     total_shares = summary.float_shares
                      equity.fdiv(total_shares).round(3)
                    end
       end

@@ -12,7 +12,6 @@ module Gcream
       #
       # Returns an instance of a rule
       def initialize(statement, rule_value, frequency)
-#        value(statement) FIXME
         @frequency  = frequency
         @rule_value = rule_value
       end

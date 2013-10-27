@@ -4,12 +4,14 @@ module Gcream
 
       VALUE = 5
 
+      attr_reader :book_values
+
       def initialize(balance_sheet)
+        set_book_values(balance_sheet)
         super balance_sheet, book_values, VALUE, :qtr, :growth
-        book_balues(balance_sheet)
       end
 
-      def book_values(balance_sheet)
+      def set_book_values(balance_sheet)
         @book_values ||= begin
                            total_debt_ary = balance_sheet.total_debt
                            total_equity_ary = balance_sheet.total_equity
