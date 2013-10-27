@@ -3,22 +3,24 @@ module Gcream
     class BookValuePerShareGrowth < Consecutive
       VALUE = 5
 
-      attr_reader :statement, :key_ratios
       def initialize(balance_sheet, key_ratios)
         # FIXME: Why isn't this inhereted from up the chain
         @statement, @key_ratios =  balance_sheet, key_ratios
         super balance_sheet, book_values, VALUE, :qtr, :growth
+        book_values(balance_sheet, key_ratios)
       end
 
-      def book_values
-        equity_ary = statement.total_equity
-        total_shares_ary = key_ratios.shares
+      def book_values(balance_sheet, key_ratios)
+        @book_values ||= begin
+                           equity_ary = statement.total_equity
+                           total_shares_ary = key_ratios.shares
 
-        equity_ary.map.with_index do |equity, i|
-          if equity && total_shares_ary[i]
-            equity.fdiv(total_shares_ary[i]).round(3) 
-          end
-        end.compact.reverse
+                           equity_ary.map.with_index do |equity, i|
+                             if equity && total_shares_ary[i]
+                               equity.fdiv(total_shares_ary[i]).round(3) 
+                             end
+                           end.compact.reverse
+                         end
       end
 
       def description

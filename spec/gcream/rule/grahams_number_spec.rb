@@ -1,3 +1,5 @@
+require "spec_helper"
+
 describe Gcream::Rule::GrahamsNumber do
 
   let(:summary) { double(eps: 5, price: 15) }

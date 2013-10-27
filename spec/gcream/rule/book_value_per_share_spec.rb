@@ -1,3 +1,5 @@
+require "spec_helper"
+
 describe Gcream::Rule::BookValuePerShare do
 
   describe "#value" do

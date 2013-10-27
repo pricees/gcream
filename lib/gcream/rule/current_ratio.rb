@@ -6,18 +6,22 @@ module Gcream
     class CurrentRatio < Base
       VALUE = 1.5
 
+      attr_reader :value
       def initialize(balance_sheet, value = VALUE, frequency = :Quarter)
         super
+        set_value(balance_sheet)
       end
 
       def description
         "Current Assets / Current Liabilities >= #{value}"
       end
 
-      def value
+      private
+
+      def set_value(balance_sheet)
         @value ||= begin
-                     ca = statement.total_current_assets.first.to_f
-                     cl = statement.total_current_liabilities.first.to_f
+                     ca = balance_sheet.total_current_assets.first.to_f
+                     cl = balance_sheet.total_current_liabilities.first.to_f
                      cl.zero? ? 0 : ca.fdiv(cl).round(2)
                    end
       end

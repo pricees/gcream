@@ -12,10 +12,9 @@ module Gcream
   module Rule
     class ConsecutiveAcceleratedGrowth
 
-      attr_reader :earnings, :income_statement, :valid_value
+      attr_reader :earnings, :valid_value
 
       def initialize(income_statement, valid_value = 0)
-        @income_statement = income_statement
         @earnings = income_statement.earnings
         @valid_value = valid_value
       end

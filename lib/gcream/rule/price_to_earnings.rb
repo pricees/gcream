@@ -2,14 +2,10 @@ module Gcream
   module Rule
     class PriceToEarnings < Base
       SAFE_VALUE = 15
-      attr_reader :summary
+      attr_reader :summary, :value
 
       def initialize(summary)
-        @summary = summary
-      end
-
-      def value
-        summary.pe
+        @value = summary.pe
       end
 
       def description

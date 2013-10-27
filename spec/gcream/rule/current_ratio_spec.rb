@@ -1,3 +1,5 @@
+require "spec_helper"
+
 describe Gcream::Rule::CurrentRatio do
   let (:financials) do
     data = double(total_current_assets: [1.88],

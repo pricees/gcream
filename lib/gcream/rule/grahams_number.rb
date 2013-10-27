@@ -12,22 +12,26 @@ module Gcream
     #       P = SQRT(22.5 * E * BV)
     class GrahamsNumber < Base
       attr_reader :summary, :price_to_book_value
+      attr_reader :value, :valid_value
 
       def initialize(price_to_book_value, summary)
         @price_to_book_value = price_to_book_value
-        @summary = summary
+        @valid_value = summary.price
+        set_value(summary)
       end
 
       def description 
         "Graham's Number (fair price per share): $"
       end
 
-      def value
-        @value ||= Math.sqrt(22.5 * summary.eps * price_to_book_value).round(2)
+      def valid?
+        value < valid_value
       end
 
-      def valid?
-        value < summary.price
+      private
+
+      def set_value(summary = nil)
+        @value ||= Math.sqrt(22.5 * summary.eps * price_to_book_value).round(2)
       end
     end
   end
