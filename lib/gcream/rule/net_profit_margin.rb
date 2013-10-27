@@ -22,7 +22,7 @@ module Gcream
       private
 
       def set_value(income_statement)
-        @value ||= income_statement.net_income.fdiv(income_statement.revenue)
+        @value ||= income_statement.net_income.first.fdiv(income_statement.revenue.first)
       end
     end
   end

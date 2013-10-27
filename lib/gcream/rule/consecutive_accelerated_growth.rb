@@ -15,7 +15,7 @@ module Gcream
       attr_reader :earnings, :valid_value
 
       def initialize(income_statement, valid_value = 0)
-        @earnings = income_statement.earnings
+        @earnings = income_statement.diluted_normalized_eps
         @valid_value = valid_value
       end
 
