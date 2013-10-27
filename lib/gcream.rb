@@ -1,5 +1,3 @@
-require "g_skrilla"
-
 module Gcream
 end
 

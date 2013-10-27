@@ -1,25 +1,24 @@
 module Gcream
   module Rule
     class BookValuePerShareGrowth < Consecutive
-      attr_reader :balance_sheet
-
       VALUE = 5
 
-      def initialize(balance_sheet)
+      attr_reader :statement, :key_ratios
+      def initialize(balance_sheet, key_ratios)
+        # FIXME: Why isn't this inhereted from up the chain
+        @statement, @key_ratios =  balance_sheet, key_ratios
         super balance_sheet, book_values, VALUE, :qtr, :growth
       end
 
       def book_values
-        equity_ary = balance_sheet.total_equity
-        total_shares_ary = balance_sheet.total_common_shares_outstanding
-
-        if equity_ary.length != total_shares_ary.length
-          raise "# of equity value != # total share values"
-        end
+        equity_ary = statement.total_equity
+        total_shares_ary = key_ratios.shares
 
         equity_ary.map.with_index do |equity, i|
-          equity.fdiv(total_shares_ary[i]).round(3)
-        end.reverse
+          if equity && total_shares_ary[i]
+            equity.fdiv(total_shares_ary[i]).round(3) 
+          end
+        end.compact.reverse
       end
 
       def description

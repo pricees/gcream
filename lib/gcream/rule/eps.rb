@@ -7,7 +7,7 @@ module Gcream
       VALUE = 5
 
       def initialize(income_statement, value = VALUE)
-        super income_statement, :diluted_normalized_eps, value
+        super income_statement, :diluted, value
       end
 
       def description

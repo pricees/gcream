@@ -4,8 +4,9 @@ module Gcream
 
       VALUE = 5
 
-      def initialize(income_statement, value = VALUE)
-        super income_statement, :total_equity, value
+      def initialize(balance_sheet, value = VALUE)
+        #super balance_sheet, :total_equity, value FIXME
+        super balance_sheet, :total_stockholders_equity, value
       end
 
       def description

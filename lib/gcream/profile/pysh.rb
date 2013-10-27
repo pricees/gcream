@@ -61,7 +61,7 @@ module Gcream
     class Pysh
       include Gcream::Rule
 
-      attr_reader :profile
+      attr_reader :profile, :financials
       attr_writer :less_than_total_shares, :price_pct_of_52_week_hi
 
       def initialize(financials)
@@ -73,7 +73,7 @@ module Gcream
       end
 
       def valid_total_shares?
-        shares = financials.balance_sheet["qtr"].
+        shares = financials.balance_sheets["qtr"].
           total_common_shares_outstanding.first
 
         shares <= less_than_total_shares
@@ -86,19 +86,20 @@ module Gcream
         (yr_hi - price).fdiv(yr_hi).abs <= price_pct_of_52_week_hi
       end
 
-      def run_rules
+      def run_rules!
         price_to_book_value = PriceToBookValuePerShare.new(
-          financials.summary, financials.balance_sheet["qtr"], 1)
+          financials.summary, financials.balance_sheets["qtr"], 1)
 
-        vigiliant_leadership.merge(stable_and_understandable).
+        vigilant_leadership.merge(stable_and_understandable).
+          merge(intrinsic_value).
           merge(teds_rules)
       end
 
       # #1 Vigilant Leadership  (2 rules)
       #   Current Ratio > 1.5   Rule::CurrentRatio
       #   Debt / Equity  < 0.5
-      def viligant_leadership
-        qtr_bs = financials.balance_sheet["qtr"]
+      def vigilant_leadership
+        qtr_bs = financials.balance_sheets["qtr"]
         { 
           "Current Ratio" => CurrentRatio.new(qtr_bs),
           "Debt-to-Equity" => DebtToEquity.new(qtr_bs),
@@ -117,19 +118,24 @@ module Gcream
       #   What does the company do?  Sector, etc?
       #
       def stable_and_understandable
-        yr_is = financials.income_statement["yr"]
-        yr_bs = financials.balance_sheet["yr"]
+        yr_is = financials.income_statements["yr"]
+        yr_bs = financials.balance_sheets["yr"]
+        key_ratios = financials.key_ratios
 
         {
-          "Increasing YoY (diluted normalized) EPS" => EPS.new(yr_is),
+          "CHECKIncreasing YoY (diluted normalized) EPS" => EPS.new(yr_is),
           "Increasing YoY equity" => TotalEquity.new(yr_bs),
-          "Increasing BV " => BookValuePerShareGrowth.new(yr_bs),
+          "Increasing BV " => BookValuePerShareGrowth.new(yr_bs, key_ratios),
           "Increasing Debt-to-Equity" => DebtToEquityGrowth.new(yr_bs),
         }
       end
 
+      def intrinsic_value
+        {}
+      end
+
       def teds_rules
-        qtr_is = financials.income_statement["qtr"]
+        qtr_is = financials.income_statements["qtr"]
 
         {
           "Increasing QoQ (diluted normalized) EPS" => EPS.new(qtr_is),

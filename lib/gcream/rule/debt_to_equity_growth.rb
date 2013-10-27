@@ -1,11 +1,12 @@
 module Gcream
   module Rule
     class DebtToEquityGrowth < Consecutive
-      attr_reader :balance_sheet
+      attr_reader :statement
 
       VALUE = 5
 
       def initialize(balance_sheet)
+        @statement = balance_sheet
         super balance_sheet, book_values, VALUE, :qtr, :growth
       end
 
@@ -19,7 +20,9 @@ module Gcream
 
         total_debt_ary.map.with_index do |debt, i|
           equity = total_equity_ary[i]
-          equity.zero? ? 0 : debt.fdiv(equity).round(2)
+          if debt && equity 
+            equity.zero? ? 0 : debt.fdiv(equity).round(2)
+          end
         end.reverse
       end
 
