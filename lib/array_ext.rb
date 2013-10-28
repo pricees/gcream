@@ -8,7 +8,7 @@ module ArrayExt
     max   = 100_000_000_000
     count = 0
     each_with_index do |val, i|
-      break if max < val 
+      break if val.nil? || max < val 
 
       count = i + 1
       max   = val
@@ -24,7 +24,7 @@ module ArrayExt
     min   = -100_000_000_000
     count = 0
     each_with_index do |val, i|
-      break if min > val 
+      break if val.nil? || max > val 
 
       count = i + 1
       min   = val

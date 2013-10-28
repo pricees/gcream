@@ -123,7 +123,7 @@ module Gcream
         key_ratios = financials.key_ratios
 
         {
-          "CHECKIncreasing YoY (diluted normalized) EPS" => 
+          "Increasing YoY (diluted normalized) EPS" => 
             EPS.new(yr_is),
           "Increasing YoY equity" => 
             TotalEquity.new(yr_bs),
@@ -140,7 +140,10 @@ module Gcream
 
       def teds_rules
         qtr_is = financials.income_statements["qtr"]
-        { "Increasing QoQ (diluted normalized) EPS" => EPS.new(qtr_is), }
+        { 
+          "Increasing QoQ (diluted normalized) EPS" => EPS.new(qtr_is), 
+          "P/E < 15" => PriceToEarnings.new(financials.summary, qtr_is.diluted_normalized_eps.first),
+        }
       end
     end
   end

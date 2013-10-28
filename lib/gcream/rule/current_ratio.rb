@@ -13,7 +13,7 @@ module Gcream
       end
 
       def description
-        "Current Assets / Current Liabilities >= #{value}"
+        "Current Assets / Current Liabilities >= #{rule_value}"
       end
 
       private

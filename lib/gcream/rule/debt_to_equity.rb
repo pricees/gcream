@@ -14,7 +14,7 @@ module Gcream
       end
 
       def description
-        "Debt / Equity <= #{SAFE_VALUE}"
+        "Debt / Equity <= #{VALUE}"
       end
 
       def valid?
