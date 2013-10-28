@@ -24,7 +24,7 @@ module ArrayExt
     min   = -100_000_000_000
     count = 0
     each_with_index do |val, i|
-      break if val.nil? || max > val 
+      break if val.nil? || min > val 
 
       count = i + 1
       min   = val

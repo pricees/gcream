@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Gcream::Rule::NetProfitMargin do
 
-  let(:income_statement)  { double(net_income: 2, revenue: 4) }
+  let(:income_statement)  { double(net_income: [2], revenue: [4]) }
   subject { Gcream::Rule::NetProfitMargin.new(income_statement) }
 
   describe "#value" do
