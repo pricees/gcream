@@ -142,7 +142,7 @@ module Gcream
         qtr_is = financials.income_statements["qtr"]
         { 
           "Increasing QoQ (diluted normalized) EPS" => EPS.new(qtr_is), 
-          "P/E < 15" => PriceToEarnings.new(financials.summary, qtr_is.diluted_normalized_eps.first),
+          "Trailing 4 qtr, P/E < 15" => PriceToEarnings.new(financials.summary, qtr_is.diluted_normalized_eps.first(4).inject(:+)),
         }
       end
     end
